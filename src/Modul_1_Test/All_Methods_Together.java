@@ -41,6 +41,7 @@ public class All_Methods_Together
             String codeLine = codeLine(lowLine, alphabet2);
             codeLineWrite(codeLine, changePath);
             System.out.println("Зашифрованный документ создан: " + changePath(pathToFile, crypto));
+            System.out.println("------------------------");
         }
         else if (userMenuChoice == 2) // если выбран режим работы декодирования текстового документа
         {
@@ -67,7 +68,10 @@ public class All_Methods_Together
                 String decodingBF_full = decodingBF_full(lowLine, countKey);
                 String changePath = changePath(createPath, decrypto);
                 codeLineWrite(decodingBF_full, changePath);
+                System.out.println("------------------------");
                 System.out.println("Расшифровка документа закончена");
+                System.out.println("Документ сохранен как " + changePath);
+                System.out.println("------------------------");
             }
             else if(userChoiceDecoding == 2) // если выбран режим декодирования методом статистического анализа
             {
