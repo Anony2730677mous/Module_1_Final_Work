@@ -10,7 +10,7 @@ import static java.nio.file.Paths.get;
 public class All_Methods_Together
 {
     public static int userChoice; // переменная, определяющая порядок действий на основании выбора пользователя
-    public static int userDecoding;
+    public static int userDecoding; // переменная, определяющая порядок действий на основании выбора пользователя
     public static int key; // объявляется переменная для записи в нее ключа шифрования, введенного пользователем. Возвращается методом enterTheKey()
     public static int countKey = 0; // переменная для перебора ключей при выборе декодирования методом brut force
     public static String alphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя.,\":-!? "; //.,":-!? // алфавит, символы которого могут быть зашифрованы
@@ -20,7 +20,7 @@ public class All_Methods_Together
     public static String pathToFile;
     public static String choiceCodingDecoding_Menu = "Выберите операцию с файлом: Кодирование - нажмите 1, Декодирование - нажмите 2. Выход из программы - нажмите 0.";
     public static String choice_Decoding_Menu = "Выберите тип дешифровки: Методом brut force - нажмите 1, методом статистического анализа - нажмите 2.";
-    public static String enter_the_key = "Введите ключ шифрования: целое положительное число не более";
+    public static String enter_the_key = "Введите ключ шифрования: целое положительное число от 0 включительно и не более";
     public static String wrongChoice = "Неправильный выбор, выберите другое число";
     public static String wrongKey = "Введенный ключ не соответствует требуемым параметрам";
     public static String crypto = "_crypto";
@@ -55,15 +55,31 @@ public class All_Methods_Together
                 int lowTextLength = lowTextLength(lowLine);
                 while (true)
                 {
-                    System.out.println("Будет попытка расшифровки фрагмента текста. Если удачно, нажмите 1, если нет - нажмите любую другую цифру");
+                    System.out.println("Будет попытка расшифровки фрагмента текста. Если удачно, нажмите 1, если нет - нажмите любую другую цифру/букву");
                     System.out.println(decodingBF_short(lowLine, lowTextLength, countKey));
-                    countKey++;
+                    //countKey++;
+                    if(countKey > (alphabet_length-1))
+                    {
+                        countKey = 0;
+                    }
                     int userAnswer = userAnswer();
                     if(userAnswer == 1)
                     {
-                        countKey = countKey - 1;
-                        break;
+                        if(countKey == 0)
+                        {
+                            break;
+                        }
+                        else if(countKey == (alphabet_length-1))
+                        {
+                            countKey = alphabet_length-1;
+                            break;
+                        }
+                        else if (countKey>0 && countKey < (alphabet_length-1))
+                        {
+                            break;
+                        }
                     }
+                    countKey++;
                 }
                 String decodingBF_full = decodingBF_full(lowLine, countKey);
                 String changePath = changePath(createPath, decrypto);
@@ -86,13 +102,14 @@ public class All_Methods_Together
     public static int enterTheKey() // метод, запрашивающий у пользователя размер ключа шифрования
     {
         int userKey;
-        System.out.println(enter_the_key + " " + alphabet_length);
+        int alphabetLength = alphabet_length-1;
+        System.out.println(enter_the_key + " " + alphabetLength);
         Scanner scanner = new Scanner(System.in);
         try {
             if (scanner.hasNext()) {
                 if (scanner.hasNextInt()) {
                     userKey = scanner.nextInt();
-                    if (userKey >= 0 && userKey <= alphabet_length) {
+                    if (userKey >= 0 && userKey <= alphabetLength) {
                         key = userKey;
 
                     } else {
