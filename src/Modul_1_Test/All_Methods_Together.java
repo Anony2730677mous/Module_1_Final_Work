@@ -4,6 +4,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.nio.file.Paths.get;
 
@@ -16,10 +18,11 @@ public class All_Methods_Together
     public static String alphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя.,\":-!? "; //.,":-!? // алфавит, символы которого могут быть зашифрованы
     public static int alphabet_length = alphabet.length(); // длина строковой переменной alphabet
     public static boolean isTextFile = false; // условие для работы цикла по вводу пути к файлу
-
+    public static boolean isTextDecode;
+    public static Pattern pattern = Pattern.compile("ёя|ёь|ёэ|ъж|эё|ъд|цё|уь|щч|чй|шй|шз|ыф|жщ|жш|жц|ыъ|ыэ|ыю|ыь|жй|ыы|жъ|жы|ъш|пй|ъщ|зщ|ъч|ъц|ъу|ъф|ъх|ъъ|ъы|ыо|жя|зй|ъь|ъэ|ыа|нй|еь|цй|ьй|ьл|ьр|пъ|еы|еъ|ьа|шъ|ёы|ёъ|ът|щс|оь|къ|оы|щх|щщ|щъ|щц|кй|оъ|цщ|лъ|мй|шщ|ць|цъ|щй|йь|ъг|иъ|ъб|ъв|ъи|ъй|ъп|ър|ъс|ъо|ън|ък|ъл|ъм|иы|иь|йу|щэ|йы|йъ|щы|щю|щя|ъа|мъ|йй|йж|ьу|гй|эъ|уъ|аь|чъ|хй|тй|чщ|ръ|юъ|фъ|уы|аъ|юь|аы|юы|эь|эы|бй|яь|ьы|ьь|ьъ|яъ|яы|хщ|дй|фй");
     public static String pathToFile;
     public static String choiceCodingDecoding_Menu = "Выберите операцию с файлом: Кодирование - нажмите 1, Декодирование - нажмите 2. Выход из программы - нажмите 0.";
-    public static String choice_Decoding_Menu = "Выберите тип дешифровки: Методом brut force - нажмите 1, методом статистического анализа - нажмите 2.";
+    public static String choice_Decoding_Menu = "Выберите тип дешифровки: Методом brute force в автоматическом режиме - нажмите 1, методом brute force в полуавтоматическом режиме - нажмите 2, методом статистического анализа - нажмите 3.";
     public static String enter_the_key = "Введите ключ шифрования: целое положительное число от 0 включительно и не более";
     public static String wrongChoice = "Неправильный выбор, выберите другое число";
     public static String wrongKey = "Введенный ключ не соответствует требуемым параметрам";
@@ -47,9 +50,36 @@ public class All_Methods_Together
         {
             System.out.println("Вы выбрали режим декодирования");
             int userChoiceDecoding = decodingMenu(); //запускается метод для выбора пользователем режима декодирования
-            if(userChoiceDecoding == 1) // если выбран режим декодирования методом brut force
+            if(userChoiceDecoding == 1) // если выбран режим декодирования методом brute force в автоматическом режиме
             {
-                System.out.println("Вы выбрали режим декодирования методом brute force");
+                System.out.println("Вы выбрали режим декодирования методом brute force в автоматическом режиме");
+                String createPath = createPath();
+                String lowLine = lowLineCase(createPath);
+                while (true)
+                {
+                     String decodingBF_full = decodingBF_full(lowLine, countKey);
+                    isTextDecode = stringAnalizer(decodingBF_full, pattern);
+                    if(isTextDecode)
+                    {
+                        String changePath = changePath(createPath, decrypto);
+                        codeLineWrite(decodingBF_full, changePath);
+                        System.out.println("------------------------");
+                        System.out.println("Расшифровка документа закончена");
+                        System.out.println("Документ сохранен как " + changePath);
+                        System.out.println("------------------------");
+                        break;
+                    }
+                    else
+                    {
+                        countKey++;
+                    }
+                 }
+
+            }
+
+            else if(userChoiceDecoding == 2) // если выбран режим декодирования методом brute force в полуавтоматическом режиме
+            {
+                System.out.println("Вы выбрали режим декодирования методом brute force в полуавтоматическом режиме с участием пользователя");
                 String createPath = createPath();
                 String lowLine = lowLineCase(createPath);
                 int lowTextLength = lowTextLength(lowLine);
@@ -57,7 +87,6 @@ public class All_Methods_Together
                 {
                     System.out.println("Будет попытка расшифровки фрагмента текста. Если удачно, нажмите 1, если нет - нажмите любую другую цифру/букву");
                     System.out.println(decodingBF_short(lowLine, lowTextLength, countKey));
-                    //countKey++;
                     if(countKey > (alphabet_length-1))
                     {
                         countKey = 0;
@@ -89,7 +118,7 @@ public class All_Methods_Together
                 System.out.println("Документ сохранен как " + changePath);
                 System.out.println("------------------------");
             }
-            else if(userChoiceDecoding == 2) // если выбран режим декодирования методом статистического анализа
+            else if(userChoiceDecoding == 3) // если выбран режим декодирования методом статистического анализа
             {
                 System.out.println("Вы выбрали режим декодирования методом статистического анализа");
             }
@@ -173,12 +202,17 @@ public class All_Methods_Together
             if (scanner.hasNext()) {
                 if (scanner.hasNextInt()) {
                     Decoding = scanner.nextInt();
-                    if (Decoding == 1) {
+                    if (Decoding == 1)
+                    {
                         userDecoding = 1;
-                    } else if (Decoding == 2) {
+                    }
+                    else if (Decoding == 2)
+                    {
                         userDecoding = 2;
-                    } else if (Decoding == 0) {
-                        userDecoding = 0;
+                    }
+                    else if (Decoding == 3)
+                    {
+                        userDecoding = 3;
                     } else {
                         System.out.println(wrongChoice);
                         decodingMenu();
@@ -236,12 +270,7 @@ public class All_Methods_Together
         {
             System.out.println("Перехвачено исключение " + e.getMessage()); // выводится сообщение об исключении
         }
-//            finally {
-//            scanner.close(); // занятый ресурс scanner закрывается
-//        }
 
-
-        //System.out.println("Зашифрованный документ создан: " + changePath(pathToFile, crypto));
         return pathToFile; // метод возвращает строковый тип данных
 
     }
@@ -255,7 +284,6 @@ public class All_Methods_Together
         return result; // метод возвращает строковый тип данных
 
     }
-
 
     public static void codeLineWrite(String codeLine, String changePath) // метод, записывающий зашифрованную строку в выходной файл
     {
@@ -359,7 +387,7 @@ finally {
         return deCodeLineText;
     }
 
-    private static String decodingBF_full(String lowText, int countKey) // метод, расшифровывающий весь текст для сохранения в файл
+    public static String decodingBF_full(String lowText, int countKey) // метод, расшифровывающий весь текст для сохранения в файл
     {
         String deCodeLineText;
         StringBuilder stringBuilder = new StringBuilder();
@@ -433,4 +461,19 @@ finally {
         }
         return userAnswer;
     }
+
+    public static boolean stringAnalizer(String textToAnalize, Pattern pattern) // метод, проверящий текст на наличие недопустимых сочетаний букв
+    {
+        boolean isDecode;
+        Matcher matcher = pattern.matcher(textToAnalize);
+        if(matcher.find())
+        {
+            isDecode = false;;
+        }
+        else
+        {
+            isDecode = true;
+        }
+        return isDecode;
+        }
 }
