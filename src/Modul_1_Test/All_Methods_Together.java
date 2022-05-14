@@ -18,8 +18,8 @@ public class All_Methods_Together
     public static String alphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя.,\":-!? "; //.,":-!? // алфавит, символы которого могут быть зашифрованы
     public static int alphabet_length = alphabet.length(); // длина строковой переменной alphabet
     public static boolean isTextFile = false; // условие для работы цикла по вводу пути к файлу
-    public static boolean isTextDecode;
-    public static Pattern pattern = Pattern.compile("ёя|ёь|ёэ|ъж|эё|ъд|цё|уь|щч|чй|шй|шз|ыф|жщ|жш|жц|ыъ|ыэ|ыю|ыь|жй|ыы|жъ|жы|ъш|пй|ъщ|зщ|ъч|ъц|ъу|ъф|ъх|ъъ|ъы|ыо|жя|зй|ъь|ъэ|ыа|нй|еь|цй|ьй|ьл|ьр|пъ|еы|еъ|ьа|шъ|ёы|ёъ|ът|щс|оь|къ|оы|щх|щщ|щъ|щц|кй|оъ|цщ|лъ|мй|шщ|ць|цъ|щй|йь|ъг|иъ|ъб|ъв|ъи|ъй|ъп|ър|ъс|ъо|ън|ък|ъл|ъм|иы|иь|йу|щэ|йы|йъ|щы|щю|щя|ъа|мъ|йй|йж|ьу|гй|эъ|уъ|аь|чъ|хй|тй|чщ|ръ|юъ|фъ|уы|аъ|юь|аы|юы|эь|эы|бй|яь|ьы|ьь|ьъ|яъ|яы|хщ|дй|фй");
+    public static boolean isTextDecode; // условие для расшифровки текста в автоматическом режиме
+    public static Pattern pattern = Pattern.compile("ёя|ёь|ёэ|ъж|эё|ъд|цё|уь|щч|чй|шй|шз|ыф|жщ|жш|жц|ыъ|ыэ|ыю|ыь|жй|ыы|жъ|жы|ъш|пй|ъщ|зщ|ъч|ъц|ъу|ъф|ъх|ъъ|ъы|ыо|жя|зй|ъь|ъэ|ыа|нй|еь|цй|ьй|ьл|ьр|пъ|еы|еъ|ьа|шъ|ёы|ёъ|ът|щс|оь|къ|оы|щх|щщ|щъ|щц|кй|оъ|цщ|лъ|мй|шщ|ць|цъ|щй|йь|ъг|иъ|ъб|ъв|ъи|ъй|ъп|ър|ъс|ъо|ън|ък|ъл|ъм|иы|иь|йу|щэ|йы|йъ|щы|щю|щя|ъа|мъ|йй|йж|ьу|гй|эъ|уъ|аь|чъ|хй|тй|чщ|ръ|юъ|фъ|уы|аъ|юь|аы|юы|эь|эы|бй|яь|ьы|ьь|ьъ|яъ|яы|хщ|дй|фй"); // шаблон для регулярного выражения, содержащий недопустимое сочетание букв
     public static String pathToFile;
     public static String choiceCodingDecoding_Menu = "Выберите операцию с файлом: Кодирование - нажмите 1, Декодирование - нажмите 2. Выход из программы - нажмите 0.";
     public static String choice_Decoding_Menu = "Выберите тип дешифровки: Методом brute force в автоматическом режиме - нажмите 1, методом brute force в полуавтоматическом режиме - нажмите 2, методом статистического анализа - нажмите 3.";
@@ -28,6 +28,9 @@ public class All_Methods_Together
     public static String wrongKey = "Введенный ключ не соответствует требуемым параметрам";
     public static String crypto = "_crypto";
     public static String decrypto = "_decrypto";
+    public static String decodingComplete = "Расшифровка документа закончена";
+    public static String fileSaveAs = "Документ сохранен как ";
+    public static String devider = "------------------------";
 
 
     public static void menu() // основной метод, запускающий меню выбора
@@ -44,7 +47,7 @@ public class All_Methods_Together
             String codeLine = codeLine(lowLine, alphabet2);
             codeLineWrite(codeLine, changePath);
             System.out.println("Зашифрованный документ создан: " + changePath(pathToFile, crypto));
-            System.out.println("------------------------");
+            System.out.println(devider);
         }
         else if (userMenuChoice == 2) // если выбран режим работы декодирования текстового документа
         {
@@ -63,10 +66,10 @@ public class All_Methods_Together
                     {
                         String changePath = changePath(createPath, decrypto);
                         codeLineWrite(decodingBF_full, changePath);
-                        System.out.println("------------------------");
-                        System.out.println("Расшифровка документа закончена");
-                        System.out.println("Документ сохранен как " + changePath);
-                        System.out.println("------------------------");
+                        System.out.println(devider);
+                        System.out.println(decodingComplete);
+                        System.out.println(fileSaveAs + changePath);
+                        System.out.println(devider);
                         break;
                     }
                     else
@@ -113,10 +116,10 @@ public class All_Methods_Together
                 String decodingBF_full = decodingBF_full(lowLine, countKey);
                 String changePath = changePath(createPath, decrypto);
                 codeLineWrite(decodingBF_full, changePath);
-                System.out.println("------------------------");
-                System.out.println("Расшифровка документа закончена");
-                System.out.println("Документ сохранен как " + changePath);
-                System.out.println("------------------------");
+                System.out.println(devider);
+                System.out.println(decodingComplete);
+                System.out.println(fileSaveAs + changePath);
+                System.out.println(devider);
             }
             else if(userChoiceDecoding == 3) // если выбран режим декодирования методом статистического анализа
             {
@@ -193,7 +196,7 @@ public class All_Methods_Together
         return userChoice;
     }
 
-    public static int decodingMenu() // метод выбора пользователем режима шифрования/дешифровки
+    public static int decodingMenu() // метод выбора пользователем режима дешифровки
     {
         int Decoding;
         System.out.println(choice_Decoding_Menu);
@@ -238,32 +241,32 @@ public class All_Methods_Together
             try { // на случай ввода неправильного пути и возникновения исключения типа Exception
             while (!isTextFile) // цикл с условием повторения приглашения ввода пути к файлу в случае неправильного ввода
             {
-                System.out.println("Введите путь к текстовому файлу с расширением txt, doc, rtf, docx"); // приглашение на ввод пути к файлу
+                System.out.println("Введите путь к текстовому файлу с расширением txt, rtf"); // приглашение на ввод пути к файлу
                 pathToFile = scanner.nextLine(); // в строку заносим введенный путь
                 if (Files.isRegularFile(Path.of(pathToFile)) && Files.exists(get(pathToFile))) // условие проверки пути на наличие и существования файла
                 {
                     System.out.println("Путь к файлу существует");
-                    System.out.println("------------------------");
+                    System.out.println(devider);
                     if (pathToFile.endsWith(".txt") || pathToFile.endsWith(".doc") || pathToFile.endsWith(".rtf") || pathToFile.endsWith("docx")) // условие для работы программы с текстовыми файлами
                     {
                         System.out.println("Выбран текстовый документ");
-                        System.out.println("------------------------");
+                        System.out.println(devider);
                         break; // если по введенному пути существует текстовый файл, то происходит выход из цикла ввода
 
                     } else // иначе предлагается проверить правильность вводимых данных
                     {
-                        System.out.println("Выберите документ с расширением txt, doc, rtf, docx");
-                        System.out.println("------------------------");
+                        System.out.println("Выберите документ с расширением txt, rtf");
+                        System.out.println(devider);
                     }
 
                 } else if (!Files.exists(get(pathToFile))) // иначе предлагается проверить правильность вводимых данных
                 {
                     System.out.println("Файла по введенному пути не существует. Проверьте правильность пути к файлу.");
-                    System.out.println("------------------------");
+                    System.out.println(devider);
                 } else if (!Files.isRegularFile(Path.of(pathToFile))) // иначе предлагается проверить правильность вводимых данных
                 {
                     System.out.println("По указанному пути текстовый файл не обнаружен. Проверьте правильность пути к файлу.");
-                    System.out.println("------------------------");
+                    System.out.println(devider);
                 }
             }
         } catch (Exception e) // при возникновении исключения в случае неправильного ввода пути к файлу
