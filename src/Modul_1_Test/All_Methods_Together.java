@@ -3,6 +3,8 @@ package Modul_1_Test;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,8 +16,9 @@ public class All_Methods_Together
     public static int userChoice; // переменная, определяющая порядок действий на основании выбора пользователя
     public static int userDecoding; // переменная, определяющая порядок действий на основании выбора пользователя
     public static int key; // объявляется переменная для записи в нее ключа шифрования, введенного пользователем. Возвращается методом enterTheKey()
-    public static int countKey = 0; // переменная для перебора ключей при выборе декодирования методом brut force
-    public static String alphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя.,\":-!? "; //.,":-!? // алфавит, символы которого могут быть зашифрованы
+    public static int countKey = 0; // переменная для перебора ключей при выборе декодирования методом brute force
+    public static String alphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя.,\":-!? "; //.,":-!? символы и алфавит, которые могут быть зашифрованы
+    public static int indexOletter = alphabet.indexOf("о"); // позиция буквы "о" в текущем алфавите
     public static int alphabet_length = alphabet.length(); // длина строковой переменной alphabet
     public static boolean isTextFile = false; // условие для работы цикла по вводу пути к файлу
     public static boolean isTextDecode; // условие для расшифровки текста в автоматическом режиме
@@ -38,8 +41,8 @@ public class All_Methods_Together
         int userMenuChoice = codingDecodingMenu(); // запускается метод для выбора пользователем режима работы программы
         if (userMenuChoice == 1) // если выбран режим кодирования текстового документа
         {
-            enterTheKey();
             System.out.println("Вы выбрали режим кодирования");
+            enterTheKey();
             String createPath = createPath();
             String changePath = changePath(createPath, crypto);
             String lowLine = lowLineCase(createPath);
@@ -89,6 +92,7 @@ public class All_Methods_Together
                 while (true)
                 {
                     System.out.println("Будет попытка расшифровки фрагмента текста. Если удачно, нажмите 1, если нет - нажмите любую другую цифру/букву");
+                    System.out.println(devider);
                     System.out.println(decodingBF_short(lowLine, lowTextLength, countKey));
                     if(countKey > (alphabet_length-1))
                     {
@@ -124,6 +128,16 @@ public class All_Methods_Together
             else if(userChoiceDecoding == 3) // если выбран режим декодирования методом статистического анализа
             {
                 System.out.println("Вы выбрали режим декодирования методом статистического анализа");
+                String createPath = createPath();
+                String lowLine = lowLineCase(createPath);
+                int keyFromTextAnalize = textAnalizer(lowLine, alphabet);
+                String decodingBF_full = decodingBF_full(lowLine, keyFromTextAnalize);
+                String changePath = changePath(createPath, decrypto);
+                codeLineWrite(decodingBF_full, changePath);
+                System.out.println(devider);
+                System.out.println(decodingComplete);
+                System.out.println(fileSaveAs + changePath);
+                System.out.println(devider);
             }
         } else if (userMenuChoice == 0) {
             System.out.println("Выход из меню");
@@ -368,7 +382,7 @@ finally {
         return lowLine;
     }
 
-    private static String decodingBF_short(String lowText, int lowTextLength, int countKey) // метод, расшифровывающий фрагмент текста для оценки пользователя
+    private static String decodingBF_short(String lowText, int lowTextLength, int countKey) // метод, расшифровывающий фрагмент текста для оценки пользователя в полуавтоматическом режиме
     {
         String deCodeLineText;
         StringBuilder stringBuilder = new StringBuilder();
@@ -479,4 +493,59 @@ finally {
         }
         return isDecode;
         }
+    public static int textAnalizer(String textToAnalize, String alphabet) // метод, принимающий зашифрованный текст и возвращающий ключ шифрования на основе статистического анализа текста
+    {
+        int key = 0;
+        int max1 = 0;
+        int max2 = 0;
+        Character m1 = '0';
+        Character m2 = '0';
+        Character letterToReturn;
+        HashMap<Character, Integer> countChar = new HashMap<Character, Integer>();
+        for (int i = 0; i < alphabet.length(); i++) // цикл для подсчета количества символов, встречающихся в тексте, и занесение пар символ-количество в коллекцию
+        {
+            int count = 0;
+            for (int j = 0; j < textToAnalize.length(); j++) {
+                if (alphabet.charAt(i) == textToAnalize.charAt(j)) {
+                    count++;
+                }
+            }
+            countChar.put(alphabet.charAt(i), count);
+        }
+
+        for (Map.Entry<Character, Integer> pair: countChar.entrySet()) // цикл, выявляющий частоту вхождения в текст буквы "о"
+        {
+            Integer value = pair.getValue();
+            Character letter = pair.getKey();
+            if(value > max1)
+            {
+                max2 = max1;
+                m2 = m1;
+                max1 = value;
+                m1 = letter;
+            }
+            else if(value < max1 && value > max2 )
+            {
+                max2 = value;
+                m2 = letter;
+            }
+        }
+        letterToReturn = m2;
+        //System.out.println(letterToReturn + " " + max2 + " " + m1 + " " + max1);
+        for (int i = 0; i < alphabet_length; i++) // цикл по алфавиту, определяющий ключ шифрования
+        {
+            if(letterToReturn == alphabet.charAt(i))
+            {
+                if(i >= indexOletter)
+                {
+                    key = i - indexOletter;
+                }
+                else
+                {
+                    key = alphabet_length - indexOletter + i;
+                }
+            }
+        }
+        return key;
+    }
 }

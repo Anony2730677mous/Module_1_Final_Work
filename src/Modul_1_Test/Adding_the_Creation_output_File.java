@@ -82,9 +82,9 @@
 //
 //    public static String changePath(String pathToFile, String crypto) // метод, создающий название зашифрованного файла, не меняя его расширения
 //    {
-//        int index = pathToFile.lastIndexOf("."); // находим индекс точки для определения расширения файла
-//        String first = pathToFile.substring(0, index); // создаем подстроку до начала расширения файла
-//        String last = pathToFile.substring(index); // создаем строку расширения файла
+//        int indexOletter = pathToFile.lastIndexOf("."); // находим индекс точки для определения расширения файла
+//        String first = pathToFile.substring(0, indexOletter); // создаем подстроку до начала расширения файла
+//        String last = pathToFile.substring(indexOletter); // создаем строку расширения файла
 //        String result = first + crypto + last; // склеиваем строки с добавлением строки, указывающей на шифрование файла
 //        return result; // метод возвращает строковый тип данных
 //
