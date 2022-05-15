@@ -324,7 +324,7 @@ public class All_Methods_Together
                 {
                     fileWriter.write(codeLine.charAt(i));
                 }
-                System.out.println("------------------------");
+                System.out.println(devider);
             }
         }
         catch (IOException e)
@@ -333,8 +333,10 @@ public class All_Methods_Together
         }
 finally {
             try {
-                fileWriter.close();
-             } catch (IOException e) {
+                if (fileWriter != null) {
+                    fileWriter.close();
+                }
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -485,7 +487,7 @@ finally {
         Matcher matcher = pattern.matcher(textToAnalize);
         if(matcher.find())
         {
-            isDecode = false;;
+            isDecode = false;
         }
         else
         {
@@ -501,7 +503,7 @@ finally {
         Character m1 = '0';
         Character m2 = '0';
         Character letterToReturn;
-        HashMap<Character, Integer> countChar = new HashMap<Character, Integer>();
+        HashMap<Character, Integer> countChar = new HashMap<>();
         for (int i = 0; i < alphabet.length(); i++) // цикл для подсчета количества символов, встречающихся в тексте, и занесение пар символ-количество в коллекцию
         {
             int count = 0;
