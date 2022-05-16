@@ -143,14 +143,16 @@ public class All_Methods_Together
             System.out.println("Выход из меню");
         }
         System.out.println("Программа завершила работу");
+
     }
 
     public static int enterTheKey() // метод, запрашивающий у пользователя размер ключа шифрования
     {
+        Scanner scanner = new Scanner(System.in); // переменная типа Scanner для считывания пути к файлу и ответов пользователя
         int userKey;
         int alphabetLength = alphabet_length-1;
         System.out.println(enter_the_key + " " + alphabetLength);
-        Scanner scanner = new Scanner(System.in);
+
         try {
             if (scanner.hasNext()) {
                 if (scanner.hasNextInt()) {
@@ -177,9 +179,9 @@ public class All_Methods_Together
 
     public static int codingDecodingMenu() // метод выбора пользователем режима шифрования/дешифровки
     {
+        Scanner scanner = new Scanner(System.in);
         System.out.println(choiceCodingDecoding_Menu);
         int codingDecoding;
-        Scanner scanner = new Scanner(System.in);
         try {
             if (scanner.hasNext()) {
                 if (scanner.hasNextInt()) {
@@ -212,9 +214,9 @@ public class All_Methods_Together
 
     public static int decodingMenu() // метод выбора пользователем режима дешифровки
     {
+        Scanner scanner = new Scanner(System.in);
         int Decoding;
         System.out.println(choice_Decoding_Menu);
-        Scanner scanner = new Scanner(System.in);
         try {
             if (scanner.hasNext()) {
                 if (scanner.hasNextInt()) {
@@ -251,11 +253,11 @@ public class All_Methods_Together
 
     public static String createPath() // метод, проверяющий и создающий путь к выбранному файлу
     {
-        Scanner scanner = new Scanner(System.in); // переменная типа Scanner для считывания пути к файлу
-            try { // на случай ввода неправильного пути и возникновения исключения типа Exception
+        Scanner scanner = new Scanner(System.in);
+        try { // на случай ввода неправильного пути и возникновения исключения типа Exception
             while (!isTextFile) // цикл с условием повторения приглашения ввода пути к файлу в случае неправильного ввода
             {
-                System.out.println("Введите путь к текстовому файлу с расширением txt, rtf"); // приглашение на ввод пути к файлу
+                System.out.println("Введите путь к текстовому файлу с расширением txt"); // приглашение на ввод пути к файлу с расширением txt (файлы с расширением doc, rtf работают, но есть путаница с кодировкой utf-8)
                 pathToFile = scanner.nextLine(); // в строку заносим введенный путь
                 if (Files.isRegularFile(Path.of(pathToFile)) && Files.exists(get(pathToFile))) // условие проверки пути на наличие и существования файла
                 {
@@ -448,15 +450,15 @@ finally {
 
     public static int userAnswer() // метод просит подтвердить/опровергнуть расшифровку фрагмента текста
     {
-        Scanner scanner1 = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         int console;
         int userAnswer = 0;
         try {
-             if(scanner1.hasNext())
+             if(scanner.hasNext())
             {
-                if(scanner1.hasNextInt())
+                if(scanner.hasNextInt())
                 {
-                    console = scanner1.nextInt();
+                    console = scanner.nextInt();
 
                     if (console == 1)
                     {
@@ -467,7 +469,7 @@ finally {
                         userAnswer = 0;
                     }
                 }
-                else if(scanner1.hasNextLine())
+                else if(scanner.hasNextLine())
                 {
 
                     userAnswer = 0;
